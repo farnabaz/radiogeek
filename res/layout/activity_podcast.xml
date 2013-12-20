@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PodcastActivity" >
+
+    <RelativeLayout
+        android:id="@+id/cover_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#aaffffff" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/podcast_number"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="#ffcc00"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/player_layout"
+        style="@style/player"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/player_play"
+            style="@style/playerButton"
+            android:layout_width="64dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_w8_play" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/player_ic_separator" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <SeekBar
+                android:id="@+id/player_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:maxHeight="7dp"
+                android:minHeight="7dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:progressDrawable="@drawable/seekbar_progress"
+                android:thumb="@drawable/player_ic_seek_handler" />
+
+            <TextView
+                android:id="@+id/current_time"
+                style="@style/playerTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/player_seekbar"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/full_time"
+                style="@style/playerTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/player_seekbar"
+                android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/player_layout"
+        android:layout_below="@+id/cover_layout"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
+</RelativeLayout>
