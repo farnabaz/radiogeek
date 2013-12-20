@@ -13,8 +13,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -37,34 +37,52 @@ public class MainActivity extends FActivity {
 	private PodcastListAdapter listAdapter;
 	private PullToRefreshListView listView;
 
-	private RSSParser parser = new RSSParser();
-	private Handler handler = new Handler();
-
 	DataHandler dh;
 
-	private final Thread LOAD_RSS_FROM_NET = new Thread() {
-		public void run() {
-			try {
-				parser.setUrl(new URL(DataHandler.PODCAST_URL));
-				parser.parse();
+	class RSSUpdator extends AsyncTask<Integer, Integer, Integer> {
+		private RSSParser parser = null;
 
-				handler.post(new Runnable() {
-
-					@Override
-					public void run() {
-						if (parser.hasItem()) {
-							showShortMessageInToast("Feed Updated.");
-							checkFeedList(parser.getRSS());
-							listAdapter.notifyDataSetChanged();
-							setDownloadState(false);
-						}
-					}
-				});
-			} catch (MalformedURLException e) {
-				// Log.e(TAG, "URL Error " + e.getMessage());
+		@Override
+		protected void onPreExecute() {
+			if (isConnectedToNetwork()) {
+				if (!isDownloadInProgress) {
+					parser = new RSSParser();
+				} else {
+					showShortMessageInToast(R.string.downloading);
+				}
+			} else {
+				showShortMessageInToast(R.string.no_internet);
 			}
-		};
-	};
+			setDownloadState(true);
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			if (parser != null)
+				try {
+					parser.setUrl(new URL(DataHandler.PODCAST_URL));
+					parser.parse();
+				} catch (MalformedURLException e) {
+					// Log.e(TAG, "URL Error " + e.getMessage());
+				}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if (parser != null)
+				if (parser.hasItem()) {
+					showShortMessageInToast(R.string.feed_updated);
+					checkFeedList(parser.getRSS());
+					listAdapter.notifyDataSetChanged();
+				} else {
+					showShortMessageInToast(R.string.feed_update_error);
+				}
+			setDownloadState(false);
+			super.onPostExecute(result);
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +100,7 @@ public class MainActivity extends FActivity {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				handler.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						if (isConnectedToNetwork()) {
-							if (!isDownloadInProgress) {
-								setDownloadState(true);
-								LOAD_RSS_FROM_NET.start();
-							} else {
-								showShortMessageInToast("Another download in progress!");
-								setDownloadState(false);
-							}
-						} else {
-							showShortMessageInToast("Device dose not connect to internet.");
-							setDownloadState(false);
-						}
-					}
-				});
+				new RSSUpdator().execute();
 			}
 		});
 
@@ -272,10 +273,10 @@ public class MainActivity extends FActivity {
 						msgIntent.putExtra("destination", DataHandler
 								.episodeAudio(item.getId()).getAbsolutePath());
 						startService(msgIntent);
-						showShortMessageInToast("Download Started");
+						showShortMessageInToast(R.string.download_start);
 						showProgressDialog();
 					} else {
-						showShortMessageInToast("Only one download can progress at a time.");
+						showShortMessageInToast(R.string.download_only_one);
 					}
 				}
 			}
@@ -285,15 +286,13 @@ public class MainActivity extends FActivity {
 
 	@Override
 	protected void onDownloadFinish() {
-		// TODO Auto-generated method stub
-		// showShortMessageInToast("Download Complete");
+		showShortMessageInToast(R.string.download_finish);
 		listAdapter.notifyDataSetChanged();
 
 	}
 
 	@Override
 	protected void onDownloadStopped() {
-		// TODO Auto-generated method stub
 
 	}
 }

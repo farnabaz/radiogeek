@@ -13,5 +13,12 @@
     
     <string name="no_content">Oops!! No content to show</string>
     <string name="no_download">No Running Download!</string>
+    <string name="feed_update_error">Oops!! Something went wrong please try again</string>
+    <string name="feed_updated">Feed Updated</string>
+    <string name="no_internet">Device dose not connect to internet.</string>
+    <string name="downloading">Another download in progress!</string>
+    <string name="download_start">Download Started</string>
+    <string name="download_finish">Download Complete</string>
+    <string name="download_only_one">Only one download can progress at a time</string>
 
 </resources>

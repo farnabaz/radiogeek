@@ -99,7 +99,6 @@ public class RSSParser extends DefaultHandler {
 	 */
 	@Override
 	public void endDocument() throws SAXException {
-
 	}
 
 	/**
