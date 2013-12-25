@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -18,6 +19,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.farnabaz.android.radiogeek.DownloadService;
 import com.farnabaz.android.radiogeek.R;
+import com.nullwire.trace.ExceptionHandler;
 
 public abstract class FActivity extends SherlockActivity {
 
@@ -28,6 +30,14 @@ public abstract class FActivity extends SherlockActivity {
 	protected abstract void onDownloadFinish();
 
 	protected abstract void onDownloadStopped();
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// send exceptions to server
+		ExceptionHandler.register(this,
+				"http://4paye.ir/external/log/server.php");
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
