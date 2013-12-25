@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.farnabaz.android.FActivity;
+import com.nullwire.trace.ExceptionHandler;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -43,6 +44,11 @@ public class PodcastActivity extends FActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_podcast);
+		
+
+		// send exceptions to server
+		ExceptionHandler.register(this,
+				"http://4paye.ir/external/log/server.php");
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

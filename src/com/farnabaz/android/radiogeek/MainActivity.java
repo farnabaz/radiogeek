@@ -3,13 +3,13 @@ package com.farnabaz.android.radiogeek;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.net.MalformedURLException;
 
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.farnabaz.android.FActivity;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nullwire.trace.ExceptionHandler;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -89,6 +89,11 @@ public class MainActivity extends FActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+
+		// send exceptions to server
+		ExceptionHandler.register(this,
+				"http://4paye.ir/external/log/server.php");
+		
 		episodesList = new ArrayList<Item>();
 		listAdapter = new PodcastListAdapter(this,
 				android.R.layout.simple_list_item_1, episodesList);

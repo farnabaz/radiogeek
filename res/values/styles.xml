@@ -15,7 +15,12 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
+	    <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+	    <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+	</style>
+	
+	<style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
+	</style>
 
     <style name="playerTimeTextView">
         <item name="android:textSize">10sp</item>
