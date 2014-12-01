@@ -160,6 +160,8 @@ public abstract class FActivity extends SherlockActivity {
 		mProgressDialog.show();
 		IntentFilter filter = new IntentFilter(
 				DownloadService.RADIOGEEK_DOWNLOAD_ACTION);
+		filter.addAction(DownloadService.RADIOGEEK_DOWNLOAD_INTERUPTED_ACTION);
+		filter.addAction(DownloadService.RADIOGEEK_DOWNLOAD_COMPLETE_ACTION);
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
 		mReceiver = new MainDataReciver();
 		registerReceiver(mReceiver, filter);
@@ -179,6 +181,10 @@ public abstract class FActivity extends SherlockActivity {
 			if (progress == total) {
 				hideProgressDialog();
 				onDownloadFinish();
+			}
+			if (DownloadService.RADIOGEEK_DOWNLOAD_INTERUPTED_ACTION
+					.equals(arg1.getAction())) {
+				hideProgressDialog();
 			}
 		}
 

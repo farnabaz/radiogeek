@@ -193,7 +193,7 @@ public class DataHandler {
 		return file;
 	}
 
-	public boolean checkSDCard() {
+	public static boolean checkSDCard() {
 		File file = new File(SDCARD_DIRECTORY_PATH);
 		if (!file.exists()) {
 			return file.mkdir();

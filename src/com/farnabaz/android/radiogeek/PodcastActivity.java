@@ -4,7 +4,6 @@ import java.io.File;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.farnabaz.android.FActivity;
-import com.nullwire.trace.ExceptionHandler;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -22,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PodcastActivity extends FActivity implements
 		OnSeekBarChangeListener {
@@ -44,16 +44,8 @@ public class PodcastActivity extends FActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_podcast);
-		
-
-		// send exceptions to server
-		ExceptionHandler.register(this,
-				"http://4paye.ir/external/log/server.php");
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		// ExceptionHandler.register(this,
-		// "http://4paye.ir/external/log/server.php");
 
 		// Media Player
 		progressBar = (SeekBar) findViewById(R.id.player_seekbar);
@@ -180,6 +172,35 @@ public class PodcastActivity extends FActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		menu.add(R.string.share_comment)
+				.setIcon(R.drawable.ic_w8_share_point)
+				.setOnMenuItemClickListener(
+						new MenuItem.OnMenuItemClickListener() {
+
+							@Override
+							public boolean onMenuItemClick(MenuItem item) {
+								if (mp != null) {
+									Intent shareIntent = new Intent();
+									shareIntent.setAction(Intent.ACTION_SEND);
+									shareIntent.setType("text/plain");
+									String comment = "@radiojadi #"
+											+ PodcastActivity.this.item.id
+											+ " ["
+											+ utils.milliSecondsToTimer(mp
+													.getCurrentPosition())
+											+ "]";
+									shareIntent.putExtra(Intent.EXTRA_TEXT,
+											comment);
+									startActivity(Intent.createChooser(
+											shareIntent, "Share your comment"));
+								} else {
+									Toast.makeText(PodcastActivity.this,
+											"No Player", Toast.LENGTH_SHORT)
+											.show();
+								}
+								return true;
+							}
+						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		menu.add(R.string.view_podcast_page)
 				.setIcon(R.drawable.ic_w8_open_in_browser)
 				.setOnMenuItemClickListener(
@@ -193,7 +214,7 @@ public class PodcastActivity extends FActivity implements
 								startActivity(browse);
 								return true;
 							}
-						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		return super.onCreateOptionsMenu(menu);
 	}
 

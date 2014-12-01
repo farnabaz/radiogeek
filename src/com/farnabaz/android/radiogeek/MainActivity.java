@@ -9,7 +9,6 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.farnabaz.android.FActivity;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.nullwire.trace.ExceptionHandler;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -28,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FActivity {
 
@@ -89,11 +89,6 @@ public class MainActivity extends FActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-
-		// send exceptions to server
-		ExceptionHandler.register(this,
-				"http://4paye.ir/external/log/server.php");
-		
 		episodesList = new ArrayList<Item>();
 		listAdapter = new PodcastListAdapter(this,
 				android.R.layout.simple_list_item_1, episodesList);
@@ -115,6 +110,12 @@ public class MainActivity extends FActivity {
 		dh.closeDB();
 
 		listAdapter.notifyDataSetChanged();
+
+		if (!DataHandler.checkSDCard()) {
+			Toast.makeText(this,
+					"radiogeek folder could not created on SDCARD",
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
@@ -277,8 +278,8 @@ public class MainActivity extends FActivity {
 						msgIntent.putExtra("url", item.getUrl());
 						msgIntent.putExtra("destination", DataHandler
 								.episodeAudio(item.getId()).getAbsolutePath());
+						msgIntent.putExtra("title", item.title);
 						startService(msgIntent);
-						showShortMessageInToast(R.string.download_start);
 						showProgressDialog();
 					} else {
 						showShortMessageInToast(R.string.download_only_one);
@@ -293,7 +294,6 @@ public class MainActivity extends FActivity {
 	protected void onDownloadFinish() {
 		showShortMessageInToast(R.string.download_finish);
 		listAdapter.notifyDataSetChanged();
-
 	}
 
 	@Override

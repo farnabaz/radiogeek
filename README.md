@@ -12,16 +12,19 @@ Simple android application for persian podcast "RadioGeek"
 - رفع مشکل بروز رسانی لیست پادکست ها
 - رفع باگ موجود در سیستم ذخیره متن پادکست ها
 - رفع چند باگ جزئی
+#### نسخه 0.0.3
+- رفع مشکل در دانلود پادکست ها
+- نمایش دانلود در Notification Bar
+- اشتراک گذاری نظرات با برچسب زمانی پخش‌کننده برنامه
 
 
 Dependencies
 ============
 - ActionBarSherlock - http://actionbarsherlock.com
 - Android-PullToRefresh - https://github.com/chrisbanes/Android-PullToRefresh
-- Android Remote Stacktrace - https://code.google.com/p/android-remote-stacktrace
 
 ## Info
 
 - Podcast website: http://jadi.net
 - Application website: http://farnabaz.ir/radiogeek
-- Current version: 0.0.2
+- Current version: 0.0.3
