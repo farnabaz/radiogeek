@@ -2,12 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".PodcastActivity" >
+
+    <include layout="@layout/toolbar" />
+
+    <View
+        android:id="@+id/header_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/action_bar"
+        android:background="@drawable/toolbar_bottom_drawable" />
 
     <RelativeLayout
         android:id="@+id/cover_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/header_bottom"
         android:background="#aaffffff" >
 
         <LinearLayout
@@ -22,10 +33,16 @@
                 android:background="#ffcc00"
                 android:gravity="center"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-
         </LinearLayout>
-
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/cover_layout"
+        android:orientation="vertical" >
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/player_layout"
@@ -33,23 +50,18 @@
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/player_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageButton
             android:id="@+id/player_play"
             style="@style/playerButton"
-            android:layout_width="64dp"
+            android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_w8_play" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/player_ic_separator" />
+            android:src="@drawable/ic_play" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -60,12 +72,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:maxHeight="7dp"
-                android:minHeight="7dp"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:progressDrawable="@drawable/seekbar_progress"
-                android:thumb="@drawable/player_ic_seek_handler" />
+                android:progressDrawable="@drawable/player_progress"
+                android:thumb="@drawable/player_thumb" />
 
             <TextView
                 android:id="@+id/current_time"
@@ -86,16 +98,6 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/content_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/player_layout"
-        android:layout_below="@+id/cover_layout"
-        android:orientation="vertical" >
-
     </LinearLayout>
 
 </RelativeLayout>

@@ -5,19 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.net.MalformedURLException;
 
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.farnabaz.android.FActivity;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,13 +31,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends FActivity {
+public class MainActivity extends FActivity implements OnRefreshListener {
 
 	private boolean isDownloadInProgress;
 
 	private ArrayList<Item> episodesList;
 	private PodcastListAdapter listAdapter;
-	private PullToRefreshListView listView;
+	private ListView listView;
+	SwipeRefreshLayout swipeLayout;
 
 	DataHandler dh;
 
@@ -89,20 +92,25 @@ public class MainActivity extends FActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getSupportActionBar().setHomeButtonEnabled(false);
+
 		episodesList = new ArrayList<Item>();
 		listAdapter = new PodcastListAdapter(this,
 				android.R.layout.simple_list_item_1, episodesList);
-		listView = (PullToRefreshListView) findViewById(R.id.podcast_list);
+		listView = (ListView) findViewById(R.id.podcast_list);
 		listView.setAdapter(listAdapter);
 
-		registerForContextMenu(listView.getRefreshableView());
-		listView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener<ListView>() {
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		// swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+		// android.R.color.holo_green_light,
+		// android.R.color.holo_orange_light,
+		// android.R.color.holo_red_light);
 
-			@Override
-			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				new RSSUpdator().execute();
-			}
-		});
+		registerForContextMenu(listView);
 
 		dh = new DataHandler(this);
 		dh.openDB();
@@ -159,22 +167,18 @@ public class MainActivity extends FActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		menu.add(R.string.about)
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-					@Override
-					public boolean onMenuItemClick(
-							com.actionbarsherlock.view.MenuItem item) {
-						startActivity(new Intent(MainActivity.this,
-								AboutActivity.class));
-						return true;
-					}
-				})
-				.setShowAsAction(
-						com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_NEVER);
-
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_about) {
+			startActivity(new Intent(MainActivity.this, AboutActivity.class));
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void checkFeedList(ArrayList<Item> items) {
@@ -198,9 +202,9 @@ public class MainActivity extends FActivity {
 	private void setDownloadState(boolean state) {
 		isDownloadInProgress = state;
 		if (state) {
-			listView.setRefreshing(true);
+			swipeLayout.setRefreshing(true);
 		} else {
-			listView.onRefreshComplete();
+			swipeLayout.setRefreshing(false);
 		}
 	}
 
@@ -299,5 +303,10 @@ public class MainActivity extends FActivity {
 	@Override
 	protected void onDownloadStopped() {
 
+	}
+
+	@Override
+	public void onRefresh() {
+		new RSSUpdator().execute();
 	}
 }

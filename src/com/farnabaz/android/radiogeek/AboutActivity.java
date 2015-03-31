@@ -3,6 +3,7 @@ package com.farnabaz.android.radiogeek;
 import com.farnabaz.android.FActivity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 
 public class AboutActivity extends FActivity {
@@ -12,6 +13,9 @@ public class AboutActivity extends FActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		WebView web = (WebView) findViewById(R.id.about_webview);

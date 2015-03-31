@@ -4,23 +4,56 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="@style/Theme.Sherlock.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
+        <item name="android:actionBarWidgetTheme">@style/AppTheme.PopupMenu</item>
+        <item name="popupMenuStyle">@style/AppTheme.PopupMenu</item>
+        <!--
+       colorPrimary is used, for instance, for the default ActionBar
+       (but not Toolbar) background.
+        We specify the same color for thetoolbar background in 
+        toolbar.xml..
+        -->
+        <item name="colorPrimary">@android:color/white</item>
+
+        <!--
+       colorPrimaryDark is used for the status bar (with the
+       battery, clock, etc).
+        -->
+        <item name="colorPrimaryDark">#aaa</item>
+
+        <!--
+        colorAccent is used as the default value for
+        colorControlActivated which is used to tint widgets.
+        -->
+
+        <item name="colorAccent">@color/material_light_blue</item>
+        <item name="toolbarStyle">@style/Widget.Toolbar</item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-	    <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
-	    <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-	</style>
-	
-	<style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
-	</style>
+
+    </style>
+    <style name="AppTheme.PopupMenu" parent="@style/Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+    
+    <style name="Widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <!-- <item name="android:navigationIcon">?attr/homeAsUpIndicator</item> -->
+        <item name="navigationIcon">?attr/homeAsUpIndicator</item>
+    </style>
 
     <style name="playerTimeTextView">
         <item name="android:textSize">10sp</item>

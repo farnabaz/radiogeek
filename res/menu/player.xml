@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_share"
+        android:title="@string/share_comment"
+        android:icon="@drawable/ic_w8_share_point"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_open_site"
+        android:title="@string/view_podcast_page"
+        android:icon="@drawable/ic_w8_open_in_browser"
+        app:showAsAction="ifRoom"/>
+    
+
+</menu>

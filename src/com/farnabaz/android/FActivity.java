@@ -11,15 +11,15 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.farnabaz.android.radiogeek.DownloadService;
 import com.farnabaz.android.radiogeek.R;
 
-public abstract class FActivity extends SherlockActivity {
+public abstract class FActivity extends ActionBarActivity {
 
 	private ProgressDialog mProgressDialog;
 
@@ -31,20 +31,7 @@ public abstract class FActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(R.string.download)
-				.setOnMenuItemClickListener(
-						new MenuItem.OnMenuItemClickListener() {
-
-							@Override
-							public boolean onMenuItemClick(MenuItem item) {
-								if (isDownloadServiceRunning()) {
-									showProgressDialog();
-								} else {
-									showShortMessageInToast(R.string.no_download);
-								}
-								return true;
-							}
-						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		getMenuInflater().inflate(R.menu.global_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -59,7 +46,13 @@ public abstract class FActivity extends SherlockActivity {
 		case android.R.id.home:
 			finish();
 			break;
-
+		case R.id.action_download:
+			if (isDownloadServiceRunning()) {
+				showProgressDialog();
+			} else {
+				showShortMessageInToast(R.string.no_download);
+			}
+			break;
 		default:
 			break;
 		}

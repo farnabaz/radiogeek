@@ -2,7 +2,6 @@ package com.farnabaz.android.radiogeek;
 
 import java.io.File;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.farnabaz.android.FActivity;
 
 import android.media.MediaPlayer;
@@ -11,8 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -45,6 +47,8 @@ public class PodcastActivity extends FActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_podcast);
 
+		Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Media Player
@@ -139,13 +143,13 @@ public class PodcastActivity extends FActivity implements
 
 	private void puasePlayer() {
 		mp.pause();
-		btnPlay.setImageResource(R.drawable.ic_w8_play);
+		btnPlay.setImageResource(R.drawable.ic_play);
 		mHandler.removeCallbacks(mUpdateTimeTask);
 	}
 
 	private void resumePlayer() {
 		mp.start();
-		btnPlay.setImageResource(R.drawable.ic_w8_pause);
+		btnPlay.setImageResource(R.drawable.ic_pause);
 		mHandler.postDelayed(mUpdateTimeTask, 100);
 	}
 
@@ -159,7 +163,7 @@ public class PodcastActivity extends FActivity implements
 			mp.seekTo(item.position);
 			// Updating progress bar
 			updateProgressBar();
-			btnPlay.setImageResource(R.drawable.ic_w8_pause);
+			btnPlay.setImageResource(R.drawable.ic_pause);
 		} catch (Exception e) {
 		}
 	}
@@ -171,51 +175,38 @@ public class PodcastActivity extends FActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		menu.add(R.string.share_comment)
-				.setIcon(R.drawable.ic_w8_share_point)
-				.setOnMenuItemClickListener(
-						new MenuItem.OnMenuItemClickListener() {
-
-							@Override
-							public boolean onMenuItemClick(MenuItem item) {
-								if (mp != null) {
-									Intent shareIntent = new Intent();
-									shareIntent.setAction(Intent.ACTION_SEND);
-									shareIntent.setType("text/plain");
-									String comment = "@radiojadi #"
-											+ PodcastActivity.this.item.id
-											+ " ["
-											+ utils.milliSecondsToTimer(mp
-													.getCurrentPosition())
-											+ "]";
-									shareIntent.putExtra(Intent.EXTRA_TEXT,
-											comment);
-									startActivity(Intent.createChooser(
-											shareIntent, "Share your comment"));
-								} else {
-									Toast.makeText(PodcastActivity.this,
-											"No Player", Toast.LENGTH_SHORT)
-											.show();
-								}
-								return true;
-							}
-						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(R.string.view_podcast_page)
-				.setIcon(R.drawable.ic_w8_open_in_browser)
-				.setOnMenuItemClickListener(
-						new MenuItem.OnMenuItemClickListener() {
-
-							@Override
-							public boolean onMenuItemClick(MenuItem item) {
-								Intent browse = new Intent(Intent.ACTION_VIEW,
-										Uri.parse(PodcastActivity.this.item
-												.getPodcastLink()));
-								startActivity(browse);
-								return true;
-							}
-						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.player, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_share:
+			if (mp != null) {
+				Intent shareIntent = new Intent();
+				shareIntent.setAction(Intent.ACTION_SEND);
+				shareIntent.setType("text/plain");
+				String comment = "@radiojadi #" + PodcastActivity.this.item.id
+						+ " ["
+						+ utils.milliSecondsToTimer(mp.getCurrentPosition())
+						+ "]";
+				shareIntent.putExtra(Intent.EXTRA_TEXT, comment);
+				startActivity(Intent.createChooser(shareIntent,
+						"Share your comment"));
+			} else {
+				Toast.makeText(PodcastActivity.this, "No Player",
+						Toast.LENGTH_SHORT).show();
+			}
+			return true;
+		case R.id.action_open_site:
+			Intent browse = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(PodcastActivity.this.item.getPodcastLink()));
+			startActivity(browse);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

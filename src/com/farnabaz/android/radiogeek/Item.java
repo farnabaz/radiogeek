@@ -121,6 +121,6 @@ public class Item {
 	}
 
 	public String getPodcastLink() {
-		return link.replace("http://jadi.net", "http://jadi2.undo.it");
+		return link.replace("http://jadi.net", "https://jadi.net");
 	}
 }
