@@ -1,7 +1,7 @@
-radiogeek
+Radiogeek
 =========
 
-Simple android application for persian podcast "RadioGeek"
+Simple android application for Persian Podcast "RadioGeek"
 
 ## تغییرات و ویژگی ها
 #### نسخه 0.0.2
@@ -19,13 +19,16 @@ Simple android application for persian podcast "RadioGeek"
 - اشتراک گذاری نظرات با برچسب زمانی پخش‌کننده برنامه
 
 
+#### نسخه 0.0.4
+- تغییر جزئی ظاهر کاربری
+- حذف کتابخانه‌های غیر الزامی
+
 Dependencies
 ============
-- ActionBarSherlock - http://actionbarsherlock.com
-- Android-PullToRefresh - https://github.com/chrisbanes/Android-PullToRefresh
+- Android Support Library v7
 
 ## Info
 
 - Podcast website: http://jadi.net
 - Application website: http://farnabaz.ir/radiogeek
-- Current version: 0.0.3
+- Current version: 0.0.4

@@ -223,7 +223,7 @@ public class MainActivity extends FActivity implements OnRefreshListener {
 			if (convertView == null) {
 				LayoutInflater inf = _context.getLayoutInflater();
 				convertView = inf.inflate(R.layout.layout_podcast_list_item,
-						null);
+						parent, false);
 			}
 			Item item = getItem(position);
 			TextView number = (TextView) convertView
@@ -240,7 +240,6 @@ public class MainActivity extends FActivity implements OnRefreshListener {
 			((TextView) convertView
 					.findViewById(R.id.podcast_list_item_description))
 					.setText(s);
-
 			title.setText(item.title);
 			switch (item.played) {
 			case Item.ITEM_NOT_PLAYED:
