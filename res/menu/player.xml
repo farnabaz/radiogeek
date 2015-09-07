@@ -4,14 +4,13 @@
 
     <item
         android:id="@+id/action_share"
+        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
         android:title="@string/share_comment"
-        android:icon="@drawable/ic_w8_share_point"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_open_site"
-        android:title="@string/view_podcast_page"
         android:icon="@drawable/ic_w8_open_in_browser"
-        app:showAsAction="ifRoom"/>
-    
+        android:title="@string/view_podcast_page"
+        app:showAsAction="never"/>
 
 </menu>

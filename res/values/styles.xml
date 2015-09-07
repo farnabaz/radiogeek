@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -11,11 +11,8 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-        <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
-        <item name="android:actionBarWidgetTheme">@style/AppTheme.PopupMenu</item>
         <item name="popupMenuStyle">@style/AppTheme.PopupMenu</item>
         <!--
        colorPrimary is used, for instance, for the default ActionBar
@@ -23,13 +20,13 @@
         We specify the same color for thetoolbar background in 
         toolbar.xml..
         -->
-        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimary">@color/primary</item>
 
         <!--
        colorPrimaryDark is used for the status bar (with the
        battery, clock, etc).
         -->
-        <item name="colorPrimaryDark">#aaa</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
 
         <!--
         colorAccent is used as the default value for
@@ -45,10 +42,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
     </style>
+
     <style name="AppTheme.PopupMenu" parent="@style/Widget.AppCompat.Light.PopupMenu.Overflow">
         <item name="android:popupBackground">@android:color/white</item>
     </style>
-    
+
     <style name="Widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
         <!-- <item name="android:navigationIcon">?attr/homeAsUpIndicator</item> -->

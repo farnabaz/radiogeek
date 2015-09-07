@@ -11,9 +11,12 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farnabaz.android.radiogeek.DownloadService;
@@ -24,6 +27,8 @@ public abstract class FActivity extends ActionBarActivity {
 	private ProgressDialog mProgressDialog;
 
 	private MainDataReciver mReceiver;
+
+	protected TextView mTitleTextView;
 
 	protected abstract void onDownloadFinish();
 
@@ -88,8 +93,8 @@ public abstract class FActivity extends ActionBarActivity {
 		ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
-			if ("com.farnabaz.android.radiogeek.DownloadService"
-					.equals(service.service.getClassName())) {
+			if (DownloadService.class.getCanonicalName().equals(
+					service.service.getClassName())) {
 				return true;
 			}
 		}
@@ -160,6 +165,34 @@ public abstract class FActivity extends ActionBarActivity {
 		registerReceiver(mReceiver, filter);
 	}
 
+	protected void initToolbar(Toolbar toolbar, boolean isUpActive) {
+		mTitleTextView = (TextView) toolbar.findViewById(R.id.title);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(isUpActive);
+		getSupportActionBar().setHomeButtonEnabled(isUpActive);
+		setTitle(getTitle());
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		if (mTitleTextView != null) {
+			super.setTitle("");
+			mTitleTextView.setText(title);
+		} else {
+			super.setTitle(title);
+		}
+	}
+
+	@Override
+	public void setTitle(int title) {
+		if (mTitleTextView != null) {
+			super.setTitle("");
+			mTitleTextView.setText(title);
+		} else {
+			super.setTitle(title);
+		}
+	}
+
 	private class MainDataReciver extends BroadcastReceiver {
 
 		@Override
@@ -182,5 +215,4 @@ public abstract class FActivity extends ActionBarActivity {
 		}
 
 	}
-
 }

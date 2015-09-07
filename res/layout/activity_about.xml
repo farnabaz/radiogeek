@@ -7,17 +7,9 @@
 
     <include layout="@layout/toolbar" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/action_bar"
-        android:background="@drawable/toolbar_bottom_drawable" />
-
     <WebView
         android:id="@+id/about_webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="false" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

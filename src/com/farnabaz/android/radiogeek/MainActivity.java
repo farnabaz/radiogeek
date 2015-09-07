@@ -6,6 +6,7 @@ import java.util.List;
 import java.net.MalformedURLException;
 
 import com.farnabaz.android.FActivity;
+import com.farnabaz.android.MediaPlayerService;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -92,10 +93,7 @@ public class MainActivity extends FActivity implements OnRefreshListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setHomeButtonEnabled(false);
+		initToolbar((Toolbar) findViewById(R.id.action_bar), false);
 
 		episodesList = new ArrayList<Item>();
 		listAdapter = new PodcastListAdapter(this,
@@ -124,6 +122,7 @@ public class MainActivity extends FActivity implements OnRefreshListener {
 					"radiogeek folder could not created on SDCARD",
 					Toast.LENGTH_LONG).show();
 		}
+		
 	}
 
 	@Override
@@ -165,7 +164,6 @@ public class MainActivity extends FActivity implements OnRefreshListener {
 		}
 		return super.onContextItemSelected(item);
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main_menu, menu);

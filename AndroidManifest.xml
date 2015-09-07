@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    
 
     <application
         android:allowBackup="true"
@@ -42,6 +45,8 @@
         </activity>
 
         <service android:name="com.farnabaz.android.radiogeek.DownloadService" />
+                <service android:name="com.farnabaz.android.MediaPlayerService" />
+        
     </application>
 
 </manifest>

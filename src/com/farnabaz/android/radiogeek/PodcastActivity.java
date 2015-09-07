@@ -3,6 +3,7 @@ package com.farnabaz.android.radiogeek;
 import java.io.File;
 
 import com.farnabaz.android.FActivity;
+import com.farnabaz.android.MediaPlayerService;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -47,10 +48,7 @@ public class PodcastActivity extends FActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_podcast);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+		initToolbar((Toolbar) findViewById(R.id.action_bar), true);
 		// Media Player
 		progressBar = (SeekBar) findViewById(R.id.player_seekbar);
 
@@ -89,8 +87,17 @@ public class PodcastActivity extends FActivity implements
 			File mp3 = DataHandler.episodeAudio(number);
 			if (mp3 != null) {
 				playPodcast(mp3.getAbsolutePath());
+				Intent intent = new Intent( getApplicationContext(), MediaPlayerService.class );
+		        intent.setAction( MediaPlayerService.ACTION_PLAY );
+		        intent.putExtra(MediaPlayerService.EXTRA_PATH, mp3.getAbsolutePath());
+		        intent.putExtra(MediaPlayerService.EXTRA_TITLE, item.title);
+		        intent.putExtra(MediaPlayerService.EXTRA_NUM, item.getId());
+		        startService( intent );
 			}
-			((TextView) findViewById(R.id.podcast_number)).setText(item.title);
+			
+			// ((TextView)
+			// findViewById(R.id.podcast_number)).setText(item.title);
+			setTitle(item.title);
 			File file = data.podcastContent(number);
 			if (file.exists()) {
 				WebView web = new WebView(this);

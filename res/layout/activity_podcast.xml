@@ -7,18 +7,11 @@
 
     <include layout="@layout/toolbar" />
 
-    <View
-        android:id="@+id/header_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/action_bar"
-        android:background="@drawable/toolbar_bottom_drawable" />
-
     <RelativeLayout
         android:id="@+id/cover_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/header_bottom"
+        android:layout_below="@id/action_bar"
         android:background="#aaffffff" >
 
         <LinearLayout
@@ -32,7 +25,9 @@
                 android:layout_height="25dp"
                 android:background="#ffcc00"
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:visibility="gone" />
+
         </LinearLayout>
     </RelativeLayout>
 

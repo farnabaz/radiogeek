@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="player_secondary">#2196f3</color>  
-	<color name="white">#ffffff</color>  
-	
-	<color name="material_light_blue">#1976d2</color>
-	
+
+    <color name="player_secondary">#2196f3</color>
+    <color name="white">#ffffff</color>
+    <color name="material_light_blue">#1976d2</color>
+    
+    <color name="primaryDark">#1976d2</color>
+    <color name="primary">#2196f3</color>
+
 </resources>
