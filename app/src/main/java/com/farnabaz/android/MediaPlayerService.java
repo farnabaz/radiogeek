@@ -1,12 +1,5 @@
 package com.farnabaz.android;
 
-import java.io.IOException;
-
-import com.farnabaz.android.radiogeek.MainActivity;
-import com.farnabaz.android.radiogeek.R;
-
-import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,18 +8,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.media.Rating;
-import android.media.session.MediaController;
-import android.media.session.MediaSession;
-import android.media.session.MediaSessionManager;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Action;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.NotificationCompat;
+import android.support.v7.app.NotificationCompat.MediaStyle;
 import android.util.Log;
+
+import com.farnabaz.android.radiogeek.MainActivity;
+import com.farnabaz.android.radiogeek.R;
+
+import java.io.IOException;
 
 /**
  * Created by paulruiz on 10/28/14.
@@ -45,11 +40,30 @@ public class MediaPlayerService extends Service {
 	public static final String EXTRA_PATH = "__path";
 	public static final String EXTRA_NUM = "__num";
 
+	private static final int NOTIFICATION_ID = 324812133;
+
 	private MediaPlayer mMediaPlayer;
-	private MediaSessionManager mManager;
+//	private MediaSessionManager mManager;
 	private MediaSessionCompat mSession;
 	private MediaControllerCompat mController;
 	private String oth;
+	private MediaStyle style;
+	private NotificationManager notificationManager;
+	private PendingIntent pendingIntent;
+
+	private NotificationCompat.Builder mNotificationBuilder;
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		style = new MediaStyle();
+		style.setShowActionsInCompactView(0);
+		style.setShowCancelButton(true);
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		pendingIntent = PendingIntent.getService(
+				getApplicationContext(), 1, new Intent(getApplicationContext(), MainActivity.class), 0);
+	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -90,35 +104,30 @@ public class MediaPlayerService extends Service {
 	}
 
 	private void buildNotification(NotificationCompat.Action action) {
-//		NotificationCompat.Style f= new NotificationCompat.Style
-		Notification.MediaStyle style = new Notification.MediaStyle();
+		if (mNotificationBuilder == null) {
+			mNotificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+					.setSmallIcon(R.drawable.ic_play)
+					.setShowWhen(false)
+					.setOngoing(true)
+					.setLargeIcon(BitmapFactory.decodeResource(getResources(),
+							R.drawable.ic_player_showcase_image))
+					.setContentTitle("RadioGeek " + mId).setContentText(mTitle)
+					.setContentIntent(pendingIntent).setDeleteIntent(pendingIntent)
+					.setStyle(style.setMediaSession(mSession.getSessionToken()));
+		} else {
+			mNotificationBuilder.mActions.clear();
+		}
 
-		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-		// intent.setAction(ACTION_STOP);
-		PendingIntent pendingIntent = PendingIntent.getService(
-				getApplicationContext(), 1, intent, 0);
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_play)
-				.setShowWhen(false)
-				.setLargeIcon(
-						BitmapFactory.decodeResource(getResources(),
-								R.drawable.ic_player_showcase_image))
-				.setContentTitle("RadioGeek " + mId).setContentText(mTitle)
-				.setContentIntent(pendingIntent).setDeleteIntent(pendingIntent)
-				.setStyle(style);
+		mNotificationBuilder.addAction(action);
 
-		builder.addAction(action);
-		style.setShowActionsInCompactView(0);
-
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(1, builder.build());
+		notificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (mSession == null) {
 			initMediaSessions();
-			if (intent.getExtras() != null) {
+			if (intent != null && intent.getExtras() != null) {
 				oth = intent.getExtras().getString(EXTRA_PATH);
 				mTitle = intent.getExtras().getString(EXTRA_TITLE);
 				mId = intent.getExtras().getInt(EXTRA_NUM);
@@ -149,8 +158,6 @@ public class MediaPlayerService extends Service {
 
 	private void initMediaSessions() {
 		mMediaPlayer = new MediaPlayer();
-
-		mManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
 
 		mEventReceiver = new ComponentName(getPackageName(),
 				MediaPlayerService.class.getName());
@@ -189,9 +196,9 @@ public class MediaPlayerService extends Service {
 				super.onPause();
 				Log.e("MediaPlayerService",
 						"onPause" + mMediaPlayer.isPlaying());
+				mMediaPlayer.pause();
 				buildNotification(generateAction(R.drawable.ic_play, "Play",
 						ACTION_PLAY));
-				mMediaPlayer.pause();
 			}
 
 			@Override

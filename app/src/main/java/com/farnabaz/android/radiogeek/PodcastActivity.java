@@ -1,16 +1,10 @@
 package com.farnabaz.android.radiogeek;
 
-import java.io.File;
-
-import com.farnabaz.android.FActivity;
-import com.farnabaz.android.MediaPlayerService;
-
-import android.media.MediaPlayer;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -24,14 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.farnabaz.android.FActivity;
+import com.farnabaz.android.MediaPlayerService;
+
+import java.io.File;
 
 public class PodcastActivity extends FActivity implements
 		OnSeekBarChangeListener {
 
 	private ImageButton btnPlay;
 
-	private MediaPlayer mp;
+//	private MediaPlayer mp;
 	private SeekBar progressBar;
 	private Handler mHandler = new Handler();
 	private TextView audioTotalDurationLabel;
@@ -55,7 +53,7 @@ public class PodcastActivity extends FActivity implements
 		audioCurrentDurationLabel = (TextView) findViewById(R.id.current_time);
 		audioTotalDurationLabel = (TextView) findViewById(R.id.full_time);
 		btnPlay = (ImageButton) findViewById(R.id.player_play);
-		mp = new MediaPlayer();
+//		mp = new MediaPlayer();
 		progressBar.setOnSeekBarChangeListener(this);
 		utils = new Utilities();
 
@@ -67,13 +65,13 @@ public class PodcastActivity extends FActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				if (mp != null) {
-					if (mp.isPlaying()) {
-						puasePlayer();
-					} else {
-						resumePlayer();
-					}
-				}
+//				if (mp != null) {
+//					if (mp.isPlaying()) {
+//						puasePlayer();
+//					} else {
+//						resumePlayer();
+//					}
+//				}
 			}
 		});
 
@@ -128,7 +126,7 @@ public class PodcastActivity extends FActivity implements
 			@Override
 			public void onCallStateChanged(int state, String incomingNumber) {
 				if (state == TelephonyManager.CALL_STATE_RINGING) {
-					isPlaying = mp.isPlaying();
+//					isPlaying = mp.isPlaying();
 					if (isPlaying) {
 						puasePlayer();
 					}
@@ -149,30 +147,30 @@ public class PodcastActivity extends FActivity implements
 	}
 
 	private void puasePlayer() {
-		mp.pause();
+//		mp.pause();
 		btnPlay.setImageResource(R.drawable.ic_play);
 		mHandler.removeCallbacks(mUpdateTimeTask);
 	}
 
 	private void resumePlayer() {
-		mp.start();
+//		mp.start();
 		btnPlay.setImageResource(R.drawable.ic_pause);
 		mHandler.postDelayed(mUpdateTimeTask, 100);
 	}
 
 	private void playPodcast(String path) {
-		try {
-			mp.reset();
-			mp.setDataSource(path);
-
-			mp.prepare();
-			mp.start();
-			mp.seekTo(item.position);
-			// Updating progress bar
-			updateProgressBar();
-			btnPlay.setImageResource(R.drawable.ic_pause);
-		} catch (Exception e) {
-		}
+//		try {
+//			mp.reset();
+//			mp.setDataSource(path);
+//
+//			mp.prepare();
+//			mp.start();
+//			mp.seekTo(item.position);
+//			// Updating progress bar
+//			updateProgressBar();
+//			btnPlay.setImageResource(R.drawable.ic_pause);
+//		} catch (Exception e) {
+//		}
 	}
 
 	public static Intent createIntent(Context context) {
@@ -191,21 +189,21 @@ public class PodcastActivity extends FActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_share:
-			if (mp != null) {
-				Intent shareIntent = new Intent();
-				shareIntent.setAction(Intent.ACTION_SEND);
-				shareIntent.setType("text/plain");
-				String comment = "@radiojadi #" + PodcastActivity.this.item.id
-						+ " ["
-						+ utils.milliSecondsToTimer(mp.getCurrentPosition())
-						+ "]";
-				shareIntent.putExtra(Intent.EXTRA_TEXT, comment);
-				startActivity(Intent.createChooser(shareIntent,
-						"Share your comment"));
-			} else {
-				Toast.makeText(PodcastActivity.this, "No Player",
-						Toast.LENGTH_SHORT).show();
-			}
+//			if (mp != null) {
+//				Intent shareIntent = new Intent();
+//				shareIntent.setAction(Intent.ACTION_SEND);
+//				shareIntent.setType("text/plain");
+//				String comment = "@radiojadi #" + PodcastActivity.this.item.id
+//						+ " ["
+//						+ utils.milliSecondsToTimer(mp.getCurrentPosition())
+//						+ "]";
+//				shareIntent.putExtra(Intent.EXTRA_TEXT, comment);
+//				startActivity(Intent.createChooser(shareIntent,
+//						"Share your comment"));
+//			} else {
+//				Toast.makeText(PodcastActivity.this, "No Player",
+//						Toast.LENGTH_SHORT).show();
+//			}
 			return true;
 		case R.id.action_open_site:
 			Intent browse = new Intent(Intent.ACTION_VIEW,
@@ -234,27 +232,27 @@ public class PodcastActivity extends FActivity implements
 	private Runnable mUpdateTimeTask = new Runnable() {
 
 		public void run() {
-			long totalDuration = mp.getDuration();
-			long currentDuration = mp.getCurrentPosition();
-
-			// Displaying Total Duration time
-			audioTotalDurationLabel.setText(""
-					+ utils.milliSecondsToTimer(totalDuration));
-			audioCurrentDurationLabel.setText(""
-					+ utils.milliSecondsToTimer(currentDuration));
-
-			// Updating progress bar
-			int progress = (int) (utils.getProgressPercentage(currentDuration,
-					totalDuration));
-			progressBar.setProgress(progress);
-
-			if (totalDuration <= currentDuration) {
-				mp.seekTo(0);
-				mp.stop();
-				data.openDB();
-				data.setItemPlayed(item.getId(), Item.ITEM_COMPLETELY_PLAYED);
-				data.closeDB();
-			}
+//			long totalDuration = mp.getDuration();
+//			long currentDuration = mp.getCurrentPosition();
+//
+//			// Displaying Total Duration time
+//			audioTotalDurationLabel.setText(""
+//					+ utils.milliSecondsToTimer(totalDuration));
+//			audioCurrentDurationLabel.setText(""
+//					+ utils.milliSecondsToTimer(currentDuration));
+//
+//			// Updating progress bar
+//			int progress = (int) (utils.getProgressPercentage(currentDuration,
+//					totalDuration));
+//			progressBar.setProgress(progress);
+//
+//			if (totalDuration <= currentDuration) {
+//				mp.seekTo(0);
+//				mp.stop();
+//				data.openDB();
+//				data.setItemPlayed(item.getId(), Item.ITEM_COMPLETELY_PLAYED);
+//				data.closeDB();
+//			}
 			// Running this thread after 100 milliseconds
 			mHandler.postDelayed(this, 100);
 		}
@@ -274,26 +272,26 @@ public class PodcastActivity extends FActivity implements
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		mHandler.removeCallbacks(mUpdateTimeTask);
-		int totalDuration = mp.getDuration();
-		int currentPosition = utils.progressToTimer(seekBar.getProgress(),
-				totalDuration);
-
-		mp.seekTo(currentPosition);
-		updateProgressBar();
+//		int totalDuration = mp.getDuration();
+//		int currentPosition = utils.progressToTimer(seekBar.getProgress(),
+//				totalDuration);
+//
+//		mp.seekTo(currentPosition);
+//		updateProgressBar();
 	}
 
 	@Override
 	public void onDestroy() {
 		data.openDB();
-		data.setItemPosition(item.getId(), mp.getCurrentPosition());
-		mHandler.removeCallbacks(mUpdateTimeTask);
-		data.close();
-		mp.release();
-		mp = null;
-		TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-		if (mgr != null) {
-			mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-		}
+//		data.setItemPosition(item.getId(), mp.getCurrentPosition());
+//		mHandler.removeCallbacks(mUpdateTimeTask);
+//		data.close();
+//		mp.release();
+//		mp = null;
+//		TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+//		if (mgr != null) {
+//			mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+//		}
 		super.onDestroy();
 	}
 
