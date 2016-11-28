@@ -3,9 +3,11 @@ package com.farnabaz.android;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.IBinder;
@@ -43,25 +45,38 @@ public class MediaPlayerService extends Service {
 	private static final int NOTIFICATION_ID = 324812133;
 
 	private MediaPlayer mMediaPlayer;
-//	private MediaSessionManager mManager;
 	private MediaSessionCompat mSession;
 	private MediaControllerCompat mController;
 	private String oth;
 	private MediaStyle style;
 	private NotificationManager notificationManager;
 	private PendingIntent pendingIntent;
-
 	private NotificationCompat.Builder mNotificationBuilder;
+
+	private BroadcastReceiver destructorReceiver = new  BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Intent mediaIntent = new Intent(getApplicationContext(),
+					MediaPlayerService.class);
+			stopService(mediaIntent);
+		}
+	};
+	private final String INTENT_FILTER = "DESTROY_MEDIA_PLAYER_NOW!";
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		registerReceiver(destructorReceiver, new IntentFilter(INTENT_FILTER));
 		style = new MediaStyle();
 		style.setShowActionsInCompactView(0);
 		style.setShowCancelButton(true);
+		style.setCancelButtonIntent(PendingIntent.getBroadcast(
+				getApplicationContext(), 1, new Intent(INTENT_FILTER), 0));
+
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-		pendingIntent = PendingIntent.getService(
+		pendingIntent = PendingIntent.getActivity(
 				getApplicationContext(), 1, new Intent(getApplicationContext(), MainActivity.class), 0);
 	}
 
@@ -69,6 +84,8 @@ public class MediaPlayerService extends Service {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
+
+
 
 	private void handleIntent(Intent intent) {
 		if (intent == null || intent.getAction() == null)
@@ -94,12 +111,7 @@ public class MediaPlayerService extends Service {
 	}
 
 	private Action generateAction(int icon, String title, String intentAction) {
-		Intent intent = new Intent(getApplicationContext(),
-				MediaPlayerService.class);
-		intent.setAction(intentAction);
-		PendingIntent pendingIntent = PendingIntent.getService(
-				getApplicationContext(), 1, intent, 0);
-		return new NotificationCompat.Action.Builder(icon, title, pendingIntent)
+		return new NotificationCompat.Action.Builder(icon, title, getPendingIntent(intentAction))
 				.build();
 	}
 
@@ -121,6 +133,19 @@ public class MediaPlayerService extends Service {
 		mNotificationBuilder.addAction(action);
 
 		notificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+	}
+
+
+	@Override
+	public void onDestroy() {
+//		release media player
+		mMediaPlayer.release();
+		mSession.release();
+//		cancel notification
+		notificationManager.cancel(NOTIFICATION_ID);
+//		unregister receiver
+		unregisterReceiver(destructorReceiver);
+		super.onDestroy();
 	}
 
 	@Override
@@ -191,6 +216,7 @@ public class MediaPlayerService extends Service {
 				mMediaPlayer.start();
 			}
 
+
 			@Override
 			public void onPause() {
 				super.onPause();
@@ -206,13 +232,10 @@ public class MediaPlayerService extends Service {
 				super.onStop();
 				Log.e("MediaPlayerService", "onStop");
 				// Stop media player here
-				// NotificationManager notificationManager =
-				// (NotificationManager) getApplicationContext()
-				// .getSystemService(Context.NOTIFICATION_SERVICE);
-				// notificationManager.cancel(1);
-				// Intent intent = new Intent(getApplicationContext(),
-				// MediaPlayerService.class);
-				// stopService(intent);
+
+//				 Intent intent = new Intent(getApplicationContext(),
+//				 MediaPlayerService.class);
+//				 stopService(intent);
 			}
 
 			// @Override
@@ -226,5 +249,13 @@ public class MediaPlayerService extends Service {
 	public boolean onUnbind(Intent intent) {
 		mSession.release();
 		return super.onUnbind(intent);
+	}
+
+	private PendingIntent getPendingIntent(String action) {
+		Intent mediaIntent = new Intent(getApplicationContext(),
+					MediaPlayerService.class);
+		mediaIntent.setAction(action);
+		return PendingIntent.getService(
+				getApplicationContext(), 1, mediaIntent, 0);
 	}
 }
